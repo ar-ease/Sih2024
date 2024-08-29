@@ -1,12 +1,18 @@
 import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors());
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.json("server is ready");
 });
 
-app.get("/data", (req, res) => {
+app.get("/api/data", (req, res) => {
   const dummyData = [
     {
       id: 1,
