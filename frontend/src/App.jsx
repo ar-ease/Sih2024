@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
-  Switch,
+  Routes,
   BrowserRouter,
 } from "react-router-dom";
 import Home from "./pages/Home";
@@ -10,12 +10,14 @@ import About from "./pages/about";
 import Signin from "./pages/signin";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import Header from "./components/Header";
 
 function App() {
   return (
     <>
       <div>
         <BrowserRouter>
+          <Header />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
