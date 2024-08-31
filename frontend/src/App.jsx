@@ -11,6 +11,7 @@ import Signin from "./pages/signin";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
+import Features from "./pages/Features";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/sign-in" element={<Signin />} />
             <Route path="/sign-up" element={<Signup />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/features" element={<Features />} />
           </Routes>
         </BrowserRouter>
       </div>
