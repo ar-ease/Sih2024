@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import nodemon from "nodemon";
 
 const app = express();
 

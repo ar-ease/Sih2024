@@ -11,6 +11,7 @@ import Signin from "./pages/signin";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
+import { TestCard } from "./components/TestCard";
 import Features from "./pages/Features";
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
     <>
       <div>
         <BrowserRouter>
-          <Header />
+          <Home />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
