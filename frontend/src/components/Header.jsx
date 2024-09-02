@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <>
       <div className="fixed z-10  w-full shadow-sm bg-transparent bg-clip-padding   ">
-        <Navbar className="top-0 border-b-2 bg-opacity-50  backdrop-blur-md pt-10 ">
+        <Navbar className="top-0 border-b-2 bg-opacity-50  backdrop-blur-md ">
           <Link
             to="/"
             className=" self-center whitespace-nowrap  text-sm sm:text-xl font-semibold dark:text-white"

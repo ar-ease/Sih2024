@@ -10,16 +10,17 @@ import About from "./pages/about";
 import Signin from "./pages/signin";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-import Header from "./components/Header";
-import { TestCard } from "./components/TestCard";
+
 import Features from "./pages/Features";
+import ComponentLayout from "./pages/ComponentLayout";
 
 function App() {
   return (
     <>
       <div>
         <BrowserRouter>
-          <Home />
+          <ComponentLayout />
+
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
