@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 
 import Features from "./pages/Features";
 import ComponentLayout from "./pages/ComponentLayout";
+import Emergency from "./pages/Emergency";
 
 function App() {
   return (
@@ -20,7 +21,6 @@ function App() {
       <div>
         <BrowserRouter>
           <ComponentLayout />
-
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -28,6 +28,7 @@ function App() {
             <Route path="/sign-up" element={<Signup />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/features" element={<Features />} />
+            <Route path="/emergency" element={<Emergency />} />
           </Routes>
         </BrowserRouter>
       </div>

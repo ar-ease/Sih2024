@@ -1,11 +1,12 @@
 import React from "react";
 import Header from "../components/Header";
-import { TestCard } from "../components/TestCard";
+import TestCard from "../components/TestCard";
+import Navbar from "@/components/Navbar";
 
 export default function ComponentLayout() {
   return (
     <div>
-      <Header />
+      <Navbar />
       <div className="pt-20">
         <TestCard />
         <TestCard />

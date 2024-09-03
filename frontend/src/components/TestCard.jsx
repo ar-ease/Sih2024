@@ -1,19 +1,26 @@
-import { Card } from "flowbite-react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Link } from "react-router-dom";
+import { FaBeer } from "react-icons/fa";
+import { AiOutlineSearch } from "react-icons/ai";
 
-export function TestCard() {
+export default function TestCard() {
   return (
-    <div className="p-5 ">
-      <Card className="max-w-sm ">
-        <a href="#">
-          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Noteworthy technology acquisitions 2021
-          </h5>
-          <p className="font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.asd
-          </p>
-        </a>
-      </Card>
-    </div>
+    <>
+      <div className="flex  gap-2">
+        <Link to="/signup">
+          <Button>Click me</Button>
+        </Link>
+        <div className="">
+          <Button variant="outline" size="icon">
+            <AiOutlineSearch
+              className={`h-[1.2rem] w-[1.2rem] transition-all `}
+            />
+          </Button>
+        </div>
+      </div>
+
+      <Calendar />
+    </>
   );
 }
