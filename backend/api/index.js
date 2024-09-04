@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-dotenv.config();
 
-// Load environment variables from .env file
+dotenv.config();
+import UserRoutes from "./routes/user.route.js";
 
 const app = express();
 // console.log("hello", process.env.HELLO);
@@ -41,6 +41,7 @@ app.get("/api/data", (req, res) => {
   res.json(dummyData);
 });
 
+app.use("/api", UserRoutes);
 const port = 3000;
 
 app.listen(port, () => {
