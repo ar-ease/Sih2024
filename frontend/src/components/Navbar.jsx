@@ -24,7 +24,7 @@ const Navbar = () => {
         <div>
           <Link
             to="/"
-            className=" self-center whitespace-nowrap  text-sm sm:text-xl font-semibold "
+            className=" self-center whitespace-nowrap  text-sm sm:text-xl font-semibold  font-mono"
           >
             PROTECTIVE
           </Link>
@@ -46,12 +46,27 @@ const Navbar = () => {
           </Button>
         </div>
         <div className="hidden gap-5 items-center font-medium lg:flex">
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-          <Link to="/Features">Features</Link>
+          <Link
+            to="/"
+            className="hover:text-violet-400 active:text-violet-500  focus:text-violet-600"
+          >
+            Home
+          </Link>
+          <Link
+            to="/about"
+            className="hover:text-violet-400 active:text-violet-500  focus:text-violet-600"
+          >
+            About
+          </Link>
+          <Link
+            to="/Features"
+            className="hover:text-violet-400 active:text-violet-500 focus:text-violet-600"
+          >
+            Features
+          </Link>
           <Link
             to="/emergency"
-            className="text-red-600  rounded-md border-2 border-red-600 px-1
+            className="text-white bg-red-500 rounded-md border-2 border-red-600 hover:text-violet-300 active:boder-balck focus:border-black dark:focus:border-white px-1
             "
           >
             Emergency
@@ -59,7 +74,9 @@ const Navbar = () => {
         </div>
         <div className="flex gap-4">
           <ModeToggle />
-          <Button className="border px-1 rounded-md">SignIn</Button>
+          <Button className="border bg-black text-white dark:bg-white dark:text-black px-3 rounded-md">
+            SignIn
+          </Button>
         </div>
 
         <div className="flex md:hidden">

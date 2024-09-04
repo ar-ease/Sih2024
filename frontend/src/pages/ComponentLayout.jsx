@@ -7,17 +7,10 @@ export default function ComponentLayout() {
   return (
     <div>
       <Navbar />
-      <div className="pt-20">
-        <TestCard />
-        <TestCard />
-        <TestCard />
-        <TestCard />
-        <TestCard />
-        <TestCard />
-        <TestCard />
-        <TestCard />
-        <TestCard />
-        <TestCard />
+      <div className="pt-24 pl-4">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <TestCard key={index} />
+        ))}
       </div>
     </div>
   );

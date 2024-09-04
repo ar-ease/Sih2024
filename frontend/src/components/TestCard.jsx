@@ -9,7 +9,7 @@ export default function TestCard() {
     <>
       <div className="flex  gap-2">
         <Link to="/signup">
-          <Button>Click me</Button>
+          <Button variant="destructive">Click me</Button>
         </Link>
         <div className="">
           <Button variant="outline" size="icon">

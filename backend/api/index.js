@@ -1,15 +1,22 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+dotenv.config();
+
+// Load environment variables from .env file
 
 const app = express();
-
+// console.log("hello", process.env.HELLO);
 app.use(cors());
-
 app.use(express.json());
 
+mongoose.connect(process.env.MONGO).then(() => {
+  console.log("Connected to MongoDB there");
+});
+
 app.get("/", (req, res) => {
-  res.json("server is ready");
+  res.json("Server is ready sdd");
 });
 
 app.get("/api/data", (req, res) => {
@@ -19,7 +26,6 @@ app.get("/api/data", (req, res) => {
       name: "John Doe",
       email: "a@gmail.com",
     },
-
     {
       id: 2,
       name: "Jane Doe",
@@ -35,7 +41,7 @@ app.get("/api/data", (req, res) => {
   res.json(dummyData);
 });
 
-const port = process.env.PORT || 3000;
+const port = 3000;
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
