@@ -34,7 +34,6 @@ const Navbar = () => {
             <Input
               type="text"
               placeholder="Search..."
-              rightIcon={AiOutlineSearch}
               className="hidden lg:inline"
             />
           </form>
