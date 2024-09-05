@@ -44,6 +44,12 @@ app.get("/api/data", (req, res) => {
 
 app.use("/api/user", UserRoutes);
 app.use("/api/auth", authroutes);
+
+app.use((err, req, res, next) => {
+  const statusCode = res.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  res.status(statusCode).json({ success: false, statusCode, message });
+});
 const port = 3000;
 
 app.listen(port, () => {
