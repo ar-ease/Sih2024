@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, LoaderCircle } from "lucide-react";
+import axios from "axios";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -35,14 +36,14 @@ export default function Signup() {
     setErrorMessage(null);
 
     try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
+      const res = await axios.post("/api/auth/signup", formData, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
       });
-      const data = await res.json();
+
+      const data = res.data;
+      console.log(data);
 
       setTimeout(() => {
         setLoading(false);
@@ -66,7 +67,7 @@ export default function Signup() {
       <div className="flex p-3 max-w-3xl mx-auto flex-col">
         <div className="flex-1">
           <Link to="/" className="font-bold font-mono text-xl">
-            PROTECTIVE
+            PROTECTIVE BY SAFE-T(ech)
           </Link>
           <p className="text-sm mt-5">
             This is a project for women's safety where we are making a community
