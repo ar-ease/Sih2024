@@ -12,8 +12,9 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 
 import Features from "./pages/Features";
-import ComponentLayout from "./pages/ComponentLayout";
+import ComponentLayout from "./layouts/ComponentLayout";
 import Emergency from "./pages/Emergency";
+import FooterComponent from "./components/Footer";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/features" element={<Features />} />
             <Route path="/emergency" element={<Emergency />} />
           </Routes>
+          <FooterComponent />
         </BrowserRouter>
       </div>
     </>

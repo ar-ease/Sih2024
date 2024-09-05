@@ -51,13 +51,13 @@ export default function Signup() {
         } else if (res.ok) {
           navigate("/sign-in");
         }
-      }, 1500);
+      }, 600);
     } catch (error) {
       // Even in case of an error, wait for 3 seconds before updating the state
       setTimeout(() => {
         setLoading(false);
         setErrorMessage(error.message);
-      }, 1500);
+      }, 600);
     }
   };
 
