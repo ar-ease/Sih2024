@@ -6,7 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, LoaderCircle } from "lucide-react";
 import axios from "axios";
 
-export default function Signup() {
+export default function SignUp() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -23,42 +23,32 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      !formData.username ||
-      !formData.email ||
-      !formData.password ||
-      !formData.confirmPassword
-    ) {
-      return setErrorMessage("Please fill all the fields");
-    }
 
     setLoading(true);
     setErrorMessage(null);
 
     try {
-      const res = await axios.post("/api/auth/signup", formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
+      const res = await axios.post("/api/auth/signup", formData);
       const data = res.data;
-      console.log(data);
 
-      setTimeout(() => {
-        setLoading(false);
-        if (data.success === false) {
-          setErrorMessage(data.message);
-        } else if (res.ok) {
-          navigate("/sign-in");
-        }
-      }, 600);
+      setLoading(false);
+      if (data.success === false) {
+        setErrorMessage(data.message);
+      } else {
+        navigate("/sign-in");
+      }
     } catch (error) {
-      // Even in case of an error, wait for 3 seconds before updating the state
-      setTimeout(() => {
-        setLoading(false);
-        setErrorMessage(error.message);
-      }, 600);
+      setLoading(false);
+      if (error.response) {
+        setErrorMessage(
+          error.response.data.message || "An error occurred during sign up"
+        );
+      } else if (error.request) {
+        setErrorMessage("No response received from server. Please try again.");
+      } else {
+        setErrorMessage("An error occurred. Please try again.");
+      }
+      console.error("Sign up error:", error);
     }
   };
 
@@ -83,6 +73,7 @@ export default function Signup() {
               id="username"
               className="border-b-2 border-black"
               onChange={handleChange}
+              required
             />
             <Input
               type="email"
@@ -90,6 +81,7 @@ export default function Signup() {
               id="email"
               className="border-b-2 border-black"
               onChange={handleChange}
+              required
             />
             <Input
               type="password"
@@ -97,6 +89,7 @@ export default function Signup() {
               id="password"
               className="border-b-2 border-black"
               onChange={handleChange}
+              required
             />
             <Input
               type="password"
@@ -104,6 +97,7 @@ export default function Signup() {
               id="confirmPassword"
               className="border-b-2 border-black"
               onChange={handleChange}
+              required
             />
             <Button className="h-10" type="submit" disabled={loading}>
               {loading ? (
