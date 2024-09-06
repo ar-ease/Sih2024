@@ -7,7 +7,6 @@ dotenv.config();
 
 export const signup = async (req, res, next) => {
   const { username, email, password, confirmPassword } = req.body;
-  console.log(confirmPassword);
 
   try {
     if (!username || !email || !password || !confirmPassword) {

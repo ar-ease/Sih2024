@@ -46,7 +46,7 @@ app.use("/api/user", UserRoutes);
 app.use("/api/auth", authroutes);
 
 app.use((err, req, res, next) => {
-  const statusCode = res.statusCode || 500;
+  const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
   res.status(statusCode).json({ success: false, statusCode, message });
 });

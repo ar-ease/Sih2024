@@ -5,15 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, LoaderCircle } from "lucide-react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "@/redux/user/userSlice";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
   });
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -22,13 +29,11 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return setErrorMessage("Please fill all the fields");
+      return dispatch(signInFailure("Please fill in all fields."));
     }
 
-    setLoading(true);
-    setErrorMessage(null);
-
     try {
+      dispatch(signInStart());
       const res = await axios.post("/api/auth/signin", formData, {
         headers: {
           "Content-Type": "application/json",
@@ -36,36 +41,19 @@ export default function SignIn() {
       });
 
       const data = res.data;
-      console.log(data);
 
-      setTimeout(() => {
-        setLoading(false);
-        if (data.success === false) {
-          setErrorMessage(data.message);
-        } else {
-          navigate("/");
-        }
-      }, 600);
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+      } else {
+        dispatch(signInSuccess(data));
+        navigate("/");
+      }
     } catch (error) {
-      setTimeout(() => {
-        setLoading(false);
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          setErrorMessage(
-            error.response.data.message || "An error occurred during sign in"
-          );
-        } else if (error.request) {
-          // The request was made but no response was received
-          setErrorMessage(
-            "No response received from server. Please try again."
-          );
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          setErrorMessage("An error occurred. Please try again.");
-        }
-        console.error("Sign in error:", error);
-      }, 600);
+      if (error.response) {
+        dispatch(signInFailure(error.response.data.message)); // Server-side error
+      } else {
+        dispatch(signInFailure("An error occurred. Please try again.")); // General error
+      }
     }
   };
 
