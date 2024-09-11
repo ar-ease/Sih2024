@@ -96,7 +96,7 @@ export const google = async (req, res, next) => {
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
         expiresIn: "1d",
       });
-      const { password, ... } = newUser._doc;
+      const { password, ...userDetails } = newUser._doc;
       res
         .status(200)
         .cookie("access_token", token, {
