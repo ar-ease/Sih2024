@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, LoaderCircle } from "lucide-react";
 import axios from "axios";
+import OAuth from "@/components/OAuth";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -65,13 +66,13 @@ export default function SignUp() {
             your credentials.
           </p>
         </div>
-        <div className="">
+        <div className="w-96 mx-auto">
           <form className="flex flex-col gap-5 pt-10" onSubmit={handleSubmit}>
             <Input
               type="text"
               placeholder="Username"
               id="username"
-              className="border-b-2 border-black"
+              className=""
               onChange={handleChange}
               required
             />
@@ -79,7 +80,7 @@ export default function SignUp() {
               type="email"
               placeholder="Email"
               id="email"
-              className="border-b-2 border-black"
+              className=""
               onChange={handleChange}
               required
             />
@@ -87,7 +88,7 @@ export default function SignUp() {
               type="password"
               placeholder="Password"
               id="password"
-              className="border-b-2 border-black"
+              className=""
               onChange={handleChange}
               required
             />
@@ -95,7 +96,7 @@ export default function SignUp() {
               type="password"
               placeholder="Confirm Password"
               id="confirmPassword"
-              className="border-b-2 border-black"
+              className=""
               onChange={handleChange}
               required
             />
@@ -108,6 +109,7 @@ export default function SignUp() {
                 "Sign up"
               )}
             </Button>
+            <OAuth />
           </form>
           <div className="flex gap-2 text-sm mt-5">
             <span>Already have an account?</span>

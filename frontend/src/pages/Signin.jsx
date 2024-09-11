@@ -11,6 +11,7 @@ import {
   signInStart,
   signInSuccess,
 } from "@/redux/user/userSlice";
+import OAuth from "@/components/OAuth";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -29,7 +30,7 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return dispatch(signInFailure("Please fill in all fields."));
+      return dispatch(signInFailure("Please fill in all fields.."));
     }
 
     try {
@@ -68,20 +69,20 @@ export default function SignIn() {
             You can sign up to your email and password to access your account
           </p>
         </div>
-        <div className="">
+        <div className="mx-auto w-96">
           <form className="flex flex-col gap-5 pt-10" onSubmit={handleSubmit}>
             <Input
               type="email"
               placeholder="a@gmail.com"
               id="email"
-              className="border-b-2 border-black"
+              className=""
               onChange={handleChange}
             />
             <Input
               type="password"
               placeholder="********"
               id="password"
-              className="border-b-2 border-black"
+              className=""
               onChange={handleChange}
             />
 
@@ -94,6 +95,7 @@ export default function SignIn() {
                 "Sign in"
               )}
             </Button>
+            <OAuth />
           </form>
           <div className="flex gap-2 text-sm mt-5">
             <span>Do not have an account?</span>

@@ -28,6 +28,7 @@ export const signup = async (req, res, next) => {
     next(error);
   }
 };
+
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -39,10 +40,7 @@ export const signin = async (req, res, next) => {
     if (!validUser) {
       return next(errorHandler(400, "User not found"));
     }
-    const validPassword = await bcryptjs.compareSync(
-      password,
-      validUser.password
-    );
+    const validPassword = await bcryptjs.compare(password, validUser.password);
     if (!validPassword) {
       return next(errorHandler(400, "Invalid password"));
     }
@@ -53,10 +51,59 @@ export const signin = async (req, res, next) => {
     const { password: pass, ...userDetails } = validUser._doc;
     res
       .status(200)
-      .cookie("token", token, {
+      .cookie("access_token", token, {
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
       })
       .json(userDetails);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const google = async (req, res, next) => {
+  const { email, name, googlePhotoURL } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      });
+      const { password, ...userDetails } = user._doc;
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          httpOnly: true,
+        })
+        .json(userDetails);
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const hashedPassword = await bcryptjs.hash(generatedPassword, 10);
+
+      const newUser = new User({
+        username:
+          name.toLowerCase().split(" ").join("") +
+          Math.random().toString(9).slice(-4),
+        email,
+        password: hashedPassword,
+        profilePicture: googlePhotoURL,
+      });
+      await newUser.save();
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      });
+      const { password, ... } = newUser._doc;
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          httpOnly: true,
+        })
+        .json(userDetails);
+    }
   } catch (error) {
     next(error);
   }
