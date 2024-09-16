@@ -15,6 +15,7 @@ import Features from "./pages/Features";
 import ComponentLayout from "./layouts/ComponentLayout";
 import Emergency from "./pages/Emergency";
 import FooterComponent from "./components/Footer";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -27,7 +28,9 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/sign-in" element={<Signin />} />
             <Route path="/sign-up" element={<Signup />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
             <Route path="/features" element={<Features />} />
             <Route path="/emergency" element={<Emergency />} />
           </Routes>
