@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 
-import { ModeToggle } from "./ModeToggle";
 import {
   Sheet,
   SheetClose,
@@ -12,8 +11,10 @@ import { IoMdMenu } from "react-icons/io";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { AiOutlineSearch } from "react-icons/ai";
-import { Button } from "@headlessui/react";
-import { useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
+
+import { useSelector, useDispatch } from "react-redux";
+import { toggleTheme } from "../redux/theme/themeSlice";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,9 +24,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Moon, Sun } from "lucide-react";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
   return (
     <div className="fixed z-10 w-full shadow-md bg-clip-padding">
       <div
@@ -92,7 +96,15 @@ const Navbar = () => {
           </NavLink>
         </div>
         <div className="flex gap-4">
-          <ModeToggle />
+          <Button
+            variant="outline"
+            size="icon"
+            className={`h-10 w-8  p-1  transition-all hidden lg:block`}
+            onClick={() => dispatch(toggleTheme())}
+          >
+            {theme === "light" ? <Sun /> : <Moon />}
+          </Button>
+
           {currentUser ? (
             <DropdownMenu>
               <DropdownMenuTrigger>
@@ -159,15 +171,19 @@ const Navbar = () => {
               <SheetClose asChild>
                 <Link to="/features">Features</Link>
               </SheetClose>
-
               <Separator />
-
               <SheetClose asChild>
                 <Link to="/emergency">Emergency</Link>
               </SheetClose>
               <Separator />
-
-              <ModeToggle />
+              <Button
+                variant="outline"
+                size="icon"
+                className={`h-10 w-8  p-1  transition-all  sm:inline`}
+                onClick={() => dispatch(toggleTheme())}
+              >
+                {theme === "light" ? <Sun /> : <Moon />}
+              </Button>
             </SheetContent>
           </Sheet>
         </div>
