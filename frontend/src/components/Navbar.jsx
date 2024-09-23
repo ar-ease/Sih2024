@@ -106,7 +106,7 @@ const Navbar = () => {
           </Button>
 
           {currentUser ? (
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger>
                 <Avatar>
                   <AvatarImage src={currentUser.profilePicture} />
