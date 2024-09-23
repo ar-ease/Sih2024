@@ -6,8 +6,10 @@ import mongoose from "mongoose";
 dotenv.config();
 import UserRoutes from "./routes/user.route.js";
 import authroutes from "./routes/auth.route.js";
-
+import cookieParser from "cookie-parser";
 const app = express();
+app.use(cookieParser());
+
 // console.log("hello", process.env.HELLO);
 app.use(cors());
 app.use(express.json());
