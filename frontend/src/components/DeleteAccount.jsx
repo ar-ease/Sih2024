@@ -16,7 +16,7 @@ import axios from "axios";
 const DeleteAccountComponent = () => {
   const [showModal, setShowModal] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false); // Control popover state
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const handleDeleteUser = async () => {
@@ -66,14 +66,14 @@ const DeleteAccountComponent = () => {
 
       {/* Modal that appears when showModal is true */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg">
+        <div className="modal-container">
+          <div className="modal">
             <h2 className="text-xl font-bold">Delete Account</h2>
             <p>Are you absolutely sure you want to delete your account?</p>
             <div className="mt-4">
               <button
                 onClick={() => {
-                  setShowModal(false); // Close modal on cancel
+                  setShowModal(false);
                 }}
                 className="mr-4 bg-gray-500 text-white px-4 py-2 rounded"
               >

@@ -7,11 +7,13 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import axios from "axios";
 import { IoMdMenu } from "react-icons/io";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { AiOutlineSearch } from "react-icons/ai";
 import { Button } from "@/components/ui/button";
+import { signoutSuccess } from "../redux/user/userSlice.js";
 
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
@@ -30,6 +32,20 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+
+  const handleSignout = async () => {
+    try {
+      const res = await axios.post("/api/user/signout");
+
+      if (res.statusText !== "OK") {
+        console.log(res.data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.response?.data?.message || "Something went wrong");
+    }
+  };
   return (
     <div className="fixed z-10 w-full shadow-md bg-clip-padding">
       <div
@@ -128,7 +144,9 @@ const Navbar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem>Sign out</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignout}>
+                  Sign out
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (

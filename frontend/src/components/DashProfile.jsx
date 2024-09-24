@@ -18,6 +18,7 @@ import {
   updateStart,
   updateSuccess,
   updateFailure,
+  signoutSuccess,
 } from "../redux/user/userSlice.js";
 import axios from "axios";
 import { app } from "../firebase";
@@ -123,6 +124,19 @@ export default function DashProfile() {
     }
   };
 
+  const handleSignout = async () => {
+    try {
+      const res = await axios.post("/api/user/signout");
+
+      if (res.statusText !== "OK") {
+        console.log(res.data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.response?.data?.message || "Something went wrong");
+    }
+  };
   return (
     <div className="max-w-lg mx-auto md:pr-56 p-3 w-full">
       <h1 className="text-center my-7">Profile</h1>
@@ -205,7 +219,9 @@ export default function DashProfile() {
 
       <div className=" flex justify-between mt-2">
         <DeleteAccount />
-        <span className="cursor-pointer text-red-400 ">Sign out</span>
+        <span onClick={handleSignout} className="cursor-pointer text-red-400 ">
+          Sign out
+        </span>
       </div>
 
       {updateUserSuccess && (

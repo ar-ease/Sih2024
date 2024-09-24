@@ -70,3 +70,22 @@ body {
 html {
   overflow-x: hidden;
 }
+
+.modal-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(175, 23, 23, 0.5);
+  z-index: 100; /* Add this line to ensure the modal is on top */
+}
+
+.modal {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 100; /* Add this line to ensure the modal is on top */
+}
