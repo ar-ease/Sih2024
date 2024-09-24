@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Upload, AlertCircle, BadgeCheck } from "lucide-react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import DeleteAccount from "./DeleteAccount";
+
 import {
   getDownloadURL,
   getStorage,
@@ -22,11 +24,12 @@ import { app } from "../firebase";
 import { set } from "date-fns";
 
 export default function DashProfile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, error } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateError, setUpdateError] = useState(null);
   const [imageFileUploading, setImageFileUploading] = useState(false);
@@ -200,9 +203,9 @@ export default function DashProfile() {
         <Button type="submit">Update</Button>
       </form>
 
-      <div className="text-red-400 flex justify-between mt-2">
-        <span className="cursor-pointer">Delete Account</span>
-        <span className="cursor-pointer">Sign out</span>
+      <div className=" flex justify-between mt-2">
+        <DeleteAccount />
+        <span className="cursor-pointer text-red-400 ">Sign out</span>
       </div>
 
       {updateUserSuccess && (
@@ -220,6 +223,13 @@ export default function DashProfile() {
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{updateError}</AlertDescription>
+        </Alert>
+      )}
+      {error && (
+        <Alert variant="destructive" className="mt-5">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
     </div>
