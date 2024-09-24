@@ -6,17 +6,13 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import {
-  ChevronRight,
-  HomeIcon,
-  LayoutDashboardIcon,
-  SettingsIcon,
-  UserIcon,
-  MenuIcon,
-  XIcon,
-} from "lucide-react";
+import axios from "axios";
+import { signoutSuccess } from "../redux/user/userSlice.js";
+import { useDispatch } from "react-redux";
+import { ChevronRight, SettingsIcon, UserIcon, MenuIcon } from "lucide-react";
 
 export default function DashSidebar() {
+  const dispatch = useDispatch();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("");
@@ -27,8 +23,13 @@ export default function DashSidebar() {
     setActiveTab(tabFromUrl || "");
   }, [location.search]);
 
-  const NavItem = ({ icon, label, to = "#", tabValue }) => (
-    <Button variant="ghost" className="w-full justify-start" asChild>
+  const NavItem = ({ icon, label, to = "#", tabValue, onClick }) => (
+    <Button
+      variant="ghost"
+      className="w-full justify-start"
+      asChild
+      onClick={onClick}
+    >
       <NavLink
         to={to}
         className={`flex items-center ${
@@ -42,8 +43,22 @@ export default function DashSidebar() {
       </NavLink>
     </Button>
   );
+  const handleSignout = async () => {
+    console.log("hii");
+    try {
+      const res = await axios.post("/api/user/signout");
 
-  const SidebarContent = () => (
+      if (res.statusText !== "OK") {
+        console.log(res.data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const SidebarContent = ({ handleSignout }) => (
     <div
       className={`flex h-full flex-col ${isCollapsed ? "items-center" : ""}`}
     >
@@ -75,6 +90,7 @@ export default function DashSidebar() {
             label="Sign Out"
             to="/dashboard?tab=sign-out"
             tabValue="sign-out"
+            onClick={handleSignout}
           />
         </nav>
       </ScrollArea>
@@ -89,7 +105,7 @@ export default function DashSidebar() {
           isCollapsed ? "w-16" : "md:w-64  w-full"
         } flex-col border-r transition-all duration-300 sm:flex`}
       >
-        <SidebarContent />
+        <SidebarContent handleSignout={handleSignout} />
       </aside>
 
       {/* Mobile Sidebar */}
@@ -100,7 +116,7 @@ export default function DashSidebar() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-64 p-0">
-          <SidebarContent />
+          <SidebarContent handleSignout={handleSignout} />
         </SheetContent>
       </Sheet>
     </>
