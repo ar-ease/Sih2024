@@ -204,6 +204,7 @@ export default function DashProfile() {
         <span className="cursor-pointer">Delete Account</span>
         <span className="cursor-pointer">Sign out</span>
       </div>
+
       {updateUserSuccess && (
         <Alert className="mt-5">
           <BadgeCheck color="#00c76a" className="h-4 w-4" />
@@ -213,8 +214,9 @@ export default function DashProfile() {
           <AlertDescription>{updateUserSuccess}</AlertDescription>
         </Alert>
       )}
+
       {updateError && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="mt-5">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{updateError}</AlertDescription>
