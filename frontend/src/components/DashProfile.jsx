@@ -6,6 +6,7 @@ import { Upload, AlertCircle, BadgeCheck } from "lucide-react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import DeleteAccount from "./DeleteAccount";
+import { useNavigate } from "react-router-dom";
 
 import {
   getDownloadURL,
@@ -23,9 +24,11 @@ import {
 import axios from "axios";
 import { app } from "../firebase";
 import { set } from "date-fns";
+import { Link } from "react-router-dom";
 
 export default function DashProfile() {
-  const { currentUser, error } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const { currentUser, error, loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -214,7 +217,15 @@ export default function DashProfile() {
           id="password"
           onChange={handleChange}
         />
-        <Button type="submit">Update</Button>
+        <Button type="submit" disabled={loading || imageFileUploadProgress}>
+          Update
+        </Button>
+
+        {currentUser.isAdmin && (
+          <Button variant="outline" onClick={() => navigate("/create-post")}>
+            Create Post
+          </Button>
+        )}
       </form>
 
       <div className=" flex justify-between mt-2">
