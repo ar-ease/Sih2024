@@ -1,3 +1,4 @@
+import postRoutes from "./routes/post.route.js";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -46,7 +47,7 @@ app.get("/api/data", (req, res) => {
 
 app.use("/api/user", UserRoutes);
 app.use("/api/auth", authroutes);
-
+app.use("/api/post", postRoutes);
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
