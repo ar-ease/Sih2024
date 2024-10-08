@@ -89,3 +89,6 @@ html {
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 100; /* Add this line to ensure the modal is on top */
 }
+.ql-editor {
+  font-size: 1.1rem;
+}

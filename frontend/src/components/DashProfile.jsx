@@ -217,6 +217,7 @@ export default function DashProfile() {
           id="password"
           onChange={handleChange}
         />
+
         <Button type="submit" disabled={loading || imageFileUploadProgress}>
           Update
         </Button>
@@ -230,7 +231,7 @@ export default function DashProfile() {
 
       <div className=" flex justify-between mt-2">
         <DeleteAccount />
-        <span onClick={handleSignout} className="cursor-pointer text-red-400 ">
+        <span onClick={handleSignout} className="cursor-pointer text-red-500 ">
           Sign out
         </span>
       </div>
