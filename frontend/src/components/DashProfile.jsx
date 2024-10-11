@@ -71,7 +71,7 @@ export default function DashProfile() {
       },
       (error) => {
         setImageFileUploadError(
-          "Unable to upload image (File must be less than 2MB)"
+          "Unable to upload image (File must be less than 2MB)",
         );
         setImageFileUploadProgress(null);
         setImageFile(null);
@@ -85,7 +85,7 @@ export default function DashProfile() {
           setImageFileUploadProgress(null);
           setImageFileUploading(false);
         });
-      }
+      },
     );
   };
 
@@ -111,7 +111,7 @@ export default function DashProfile() {
       dispatch(updateStart());
       const res = await axios.put(
         `/api/user/update/${currentUser._id}`,
-        formData
+        formData,
       );
 
       console.log("res is", res);
