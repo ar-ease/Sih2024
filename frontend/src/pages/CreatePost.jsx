@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, LoaderCircle } from "lucide-react";
@@ -28,6 +29,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
 export default function CreatePost() {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [imageUpoloadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
@@ -86,20 +88,24 @@ export default function CreatePost() {
       });
 
       const data = response.data;
-
       // Check response status code
-      if (response.status !== 200) {
+      if (response.statusText !== "Created") {
         setPublishError(data.message || "An error occurred while publishing.");
         return;
       }
+      if (response.statusText === "Created") {
+        // Clear error if everything is successful
 
-      // Clear error if everything is successful
-      setPublishError(null);
+        console.log("data", data);
+        console.log("data.slug", data.slug);
+        setPublishError(null);
+        navigate(`/post/${data.slug}`);
+      }
     } catch (error) {
       console.log("Error during submission:", error);
-      console.log("Error response:", error.response.data.message);
+      console.log("Error response:", error?.response?.data?.message);
       if (error.response) {
-        setPublishError(error.response.data.message);
+        setPublishError(error?.response?.data?.message);
         return;
       }
 
