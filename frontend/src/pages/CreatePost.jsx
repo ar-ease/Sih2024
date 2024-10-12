@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, LoaderCircle } from "lucide-react";
 
@@ -31,6 +32,7 @@ export default function CreatePost() {
   const [imageUpoloadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
+  const [publishError, setPublishError] = useState(null);
   const handleUploadImage = async () => {
     try {
       if (!file) {
@@ -57,7 +59,6 @@ export default function CreatePost() {
               setImageUploadProgress(null);
               setImageUploadError(null);
               setFormData({ ...formData, image: downloadURL });
-              console.log(downloadURL);
             });
           },
         );
@@ -65,7 +66,44 @@ export default function CreatePost() {
     } catch (error) {
       setImageUploadError("unable to upload image");
       setImageUploadProgress(null);
-      console.log(error);
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Log formData to ensure it has the right values
+    if (!formData.title) {
+      setPublishError("Make sure to fill the title.");
+      return;
+    }
+    if (!formData.content) {
+      setPublishError("Make sure to fill the content.");
+      return;
+    }
+    try {
+      const response = await axios.post("/api/post/create", formData, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = response.data;
+
+      // Check response status code
+      if (response.status !== 200) {
+        setPublishError(data.message || "An error occurred while publishing.");
+        return;
+      }
+
+      // Clear error if everything is successful
+      setPublishError(null);
+    } catch (error) {
+      console.log("Error during submission:", error);
+      console.log("Error response:", error.response.data.message);
+      if (error.response) {
+        setPublishError(error.response.data.message);
+        return;
+      }
+
+      setPublishError("Something went wrong. Please try again later.");
     }
   };
   return (
@@ -73,20 +111,35 @@ export default function CreatePost() {
       <div className="p-3 max-w-3xl mx-auto min-h-screen">
         <h1 className="text-center text-3xl my-7 font-semibold">Create Post</h1>
 
-        <form className="flex flex-col gap-4 ">
+        <form className="flex flex-col gap-4 " onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
             <div className=" flex-1 max-w-sm">
-              <Input type="text" placeholder="Title" />
+              <Input
+                type="text"
+                placeholder="Title"
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+              />
             </div>
             <div>
               {" "}
-              <Select>
+              <Select
+                value={formData.category || "uncategorized"} // Set the value, default to "uncategorized" if empty
+                onValueChange={(value) =>
+                  setFormData({ ...formData, category: value })
+                }
+              >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select a catagory" />
+                  <SelectValue>
+                    {formData.category ? formData.category : "Uncategorized"}{" "}
+                    {/* Show "Uncategorized" when no value */}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Fruits</SelectLabel>
+                    <SelectItem value="uncategorized">Uncategorized</SelectItem>{" "}
+                    {/* Option for Uncategorized */}
                     <SelectItem value="apple">Apple</SelectItem>
                     <SelectItem value="banana">Banana</SelectItem>
                     <SelectItem value="blueberry">Blueberry</SelectItem>
@@ -106,8 +159,9 @@ export default function CreatePost() {
                 accept="image/*"
                 onChange={(e) => setFile(e.target.files[0])}
               />
-            </div>
+            </div>{" "}
             <div className="mt-6 pl-6">
+              {" "}
               <Button
                 type="submit"
                 className="px-16 bg-blue-500 hover:bg-blue-700"
@@ -125,23 +179,28 @@ export default function CreatePost() {
                   "Upload"
                 )}
               </Button>
-            </div>{" "}
-          </div>{" "}
-          {imageUploadError && (
-            <div className="pt-4">
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{imageUploadError}</AlertDescription>
-              </Alert>
+              <div>
+                {" "}
+                {imageUploadError && (
+                  <div className="pt-4">
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Error</AlertTitle>
+                      <AlertDescription>{imageUploadError}</AlertDescription>
+                    </Alert>
+                  </div>
+                )}
+              </div>
             </div>
-          )}
+          </div>
           {formData.image && (
-            <img
-              src={formData.image}
-              alt="uploaded"
-              className="pl-32 w-fit h-72"
-            />
+            <div className="flex justify-center">
+              <img
+                src={formData.image}
+                alt="uploaded"
+                className="mx-auto    w-fit h-72"
+              />
+            </div>
           )}
           <div className="">
             <ReactQuill
@@ -149,11 +208,26 @@ export default function CreatePost() {
               placeholder="write something..."
               className="h-72"
               required
+              onChange={(value) => setFormData({ ...formData, content: value })}
             />
-            <div className="pt-14 flex justify-center p-20">
-              <Button type="submit" className="">
-                Create Post
-              </Button>
+            <div className=" flex justify-center p-20">
+              <div>
+                <div className="pl-14">
+                  {" "}
+                  <Button type="submit" className="">
+                    Create Post
+                  </Button>
+                </div>
+                {publishError && (
+                  <div className="mt-4 mr-0">
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Error message</AlertTitle>
+                      <AlertDescription>{publishError}</AlertDescription>
+                    </Alert>
+                  </div>
+                )}{" "}
+              </div>
             </div>
           </div>
         </form>
