@@ -1,3 +1,5 @@
+import { FileCheck } from "lucide-react";
+
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,9 +12,11 @@ import axios from "axios";
 import { signoutSuccess } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
 import { ChevronRight, SettingsIcon, UserIcon, MenuIcon } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export default function DashSidebar() {
   const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("");
@@ -81,10 +85,30 @@ export default function DashSidebar() {
         <nav className="flex-1 space-y-2 p-4">
           <NavItem
             icon={<UserIcon className="h-4 w-4" />}
-            label="Profile"
+            label={
+              <>
+                Profile
+                {currentUser.isAdmin === true ? (
+                  <span className="ml-10 bg-red-100 text-red-600 text-xs font-semibold px-2 py-1 rounded">
+                    Admin
+                  </span>
+                ) : (
+                  <span className="ml-10 bg-blue-100 text-blue-600 text-xs font-semibold px-2 py-1 rounded">
+                    User
+                  </span>
+                )}
+              </>
+            }
             to="/dashboard?tab=profile"
             tabValue="profile"
           />
+          <NavItem
+            icon={<FileCheck className="h-4 w-4" />}
+            label="Posts"
+            to="/dashboard?tab=posts"
+            tabValue="posts"
+          />
+
           <NavItem
             icon={<SettingsIcon className="h-4 w-4" />}
             label="Sign Out"
