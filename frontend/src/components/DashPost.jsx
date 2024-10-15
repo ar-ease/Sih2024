@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 import { Link } from "react-router-dom";
 import {
   Table,
@@ -16,17 +18,23 @@ import { set } from "date-fns";
 export default function DashPost() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
+
   console.log(currentUser._id);
   console.log(userPosts);
-
+  const [showMore, setShowMore] = useState(true);
   useEffect(() => {
     try {
       const fetchPosts = async () => {
         const res = await axios.post(
           `/api/post/getposts?userId=${currentUser._id}`
         );
-        console.log(res);
-        setUserPosts(res.data.posts);
+
+        if (res.status === 200) {
+          setUserPosts(res.data.posts);
+          if (res.data.posts.length < 9) {
+            setShowMore(false);
+          }
+        }
       };
       if (currentUser.isAdmin) {
         fetchPosts();
@@ -35,12 +43,39 @@ export default function DashPost() {
       console.log(error);
     }
   }, [currentUser._id]);
+
+  const handleShowMore = async () => {
+    console.log("show more gottttttttt");
+    const startIndex = userPosts.length;
+    try {
+      const data = await axios.post(
+        `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+      );
+      console.log("data", data?.data?.posts);
+      if (data.status === 200) {
+        setUserPosts((prev) => [...prev, ...data.data.posts]);
+        if (data.posts.length < 9) {
+          setShowMore(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="">
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <div className="w-full">
           <Table className="">
-            <TableCaption>List of all posts</TableCaption>
+            {showMore && (
+              <TableCaption
+                onClick={handleShowMore}
+                className="text-neutral-500 bg-slate-200 py-2 text-md font-semibold "
+              >
+                List of all posts
+              </TableCaption>
+            )}
+
             <TableHeader>
               <TableRow>
                 <TableHead className="">Date updated(MM/DD/YYYY)</TableHead>
