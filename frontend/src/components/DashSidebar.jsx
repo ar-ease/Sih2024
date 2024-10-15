@@ -68,7 +68,7 @@ export default function DashSidebar() {
     >
       <div className="flex items-center justify-between p-4">
         {!isCollapsed && <h2 className="text-lg font-semibold">My App</h2>}
-        <Button
+        {/* <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -78,7 +78,7 @@ export default function DashSidebar() {
               isCollapsed ? "rotate-180" : ""
             }`}
           />
-        </Button>
+        </Button> */}
       </div>
       <Separator />
       <ScrollArea className="flex-1">

@@ -112,6 +112,7 @@ export default function CreatePost() {
       setPublishError("Something went wrong. Please try again later.");
     }
   };
+  console.log("formData", formData);
   return (
     <>
       <div className="p-3 max-w-3xl mx-auto min-h-screen">
