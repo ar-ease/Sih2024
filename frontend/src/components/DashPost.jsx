@@ -124,7 +124,7 @@ export default function DashPost() {
                   <TableCell>
                     <Link
                       className="text-blue-600 hover:underline mr-4"
-                      to={`/update-post/${post.slug}`}
+                      to={`/update-post/${post._id}`}
                     >
                       Edit
                     </Link>
