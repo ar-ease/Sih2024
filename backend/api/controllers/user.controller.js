@@ -75,3 +75,51 @@ export const signout = (req, res) => {
     next(errorHandler(500, "An error occurred while signing out"));
   }
 };
+export const getUsers = async (req, res, next) => {
+  // Check if user is admin
+  if (!req.user.isAdmin) {
+    return next(errorHandler(403, "You are not authorized to view users"));
+  }
+
+  try {
+    // Pagination and sorting
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    const limit = parseInt(req.query.limit) || 9; // Corrected limit query
+    const sortDirection = req.query.sort === "asc" ? 1 : -1;
+
+    // Fetch users, excluding their passwords
+    const users = await User.find()
+      .sort({ updatedAt: sortDirection })
+      .skip(startIndex)
+      .limit(limit);
+
+    const usersWithoutPassword = users.map((user) => {
+      const { password, ...userDetails } = user._doc;
+      return userDetails;
+    });
+
+    // Count total users
+    const totalUsers = await User.countDocuments();
+
+    // Count users updated in the last month
+    const now = new Date();
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+    const lastMonthUsers = await User.countDocuments({
+      updatedAt: { $gte: oneMonthAgo },
+    });
+
+    // Send response
+    res.status(200).json({
+      users: usersWithoutPassword,
+      totalUsers,
+      lastMonthUsers,
+    });
+  } catch (error) {
+    // Error handling
+    next(errorHandler(500, error.message));
+  }
+};
