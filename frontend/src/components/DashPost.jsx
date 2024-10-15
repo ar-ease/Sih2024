@@ -1,6 +1,12 @@
-import { Button } from "@/components/ui/button";
-
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 import { Link } from "react-router-dom";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -10,84 +16,97 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { set } from "date-fns";
 
 export default function DashPost() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
-
-  console.log(currentUser._id);
-  console.log(userPosts);
   const [showMore, setShowMore] = useState(true);
-  useEffect(() => {
-    try {
-      const fetchPosts = async () => {
-        const res = await axios.post(
-          `/api/post/getposts?userId=${currentUser._id}`
-        );
+  const [popoverOpen, setPopoverOpen] = useState(null);
+  const [postIdToDelete, setPostIdToDelete] = useState(null);
 
-        if (res.status === 200) {
-          setUserPosts(res.data.posts);
-          if (res.data.posts.length < 9) {
-            setShowMore(false);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        if (currentUser.isAdmin) {
+          const res = await axios.post(
+            `/api/post/getposts?userId=${currentUser._id}`
+          );
+          if (res.status === 200) {
+            setUserPosts(res.data.posts);
+            setShowMore(res.data.posts.length >= 9);
           }
         }
-      };
-      if (currentUser.isAdmin) {
-        fetchPosts();
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [currentUser._id]);
+    };
+    fetchPosts();
+  }, [currentUser._id, currentUser.isAdmin]);
 
   const handleShowMore = async () => {
-    console.log("show more gottttttttt");
-    const startIndex = userPosts.length;
     try {
-      const data = await axios.post(
+      const startIndex = userPosts.length;
+      const res = await axios.post(
         `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
       );
-      console.log("data", data?.data?.posts);
-      if (data.status === 200) {
-        setUserPosts((prev) => [...prev, ...data.data.posts]);
-        if (data.posts.length < 9) {
-          setShowMore(false);
-        }
+      if (res.status === 200) {
+        setUserPosts((prev) => [...prev, ...res.data.posts]);
+        setShowMore(res.data.posts.length >= 9);
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  const handleDeletePost = async () => {
+    setPopoverOpen(null);
+    try {
+      const response = await axios.delete(
+        `/api/post/deletepost/${postIdToDelete}/${currentUser._id}`
+      );
+
+      if (response.status === 200) {
+        // Use response.status instead of statusText
+        setUserPosts((prev) =>
+          prev.filter((post) => post._id !== postIdToDelete)
+        );
+      } else {
+        console.log("Unexpected response:", response);
+      }
+    } catch (error) {
+      console.error(
+        "Error deleting post:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   return (
     <div className="">
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <div className="w-full">
-          <Table className="">
+          <Table>
             {showMore && (
               <TableCaption
                 onClick={handleShowMore}
-                className="text-neutral-500 bg-slate-200 py-2 text-md font-semibold "
+                className="text-neutral-500 bg-slate-200 py-2 text-md font-semibold cursor-pointer"
               >
-                List of all posts
+                Show more posts
               </TableCaption>
             )}
-
             <TableHeader>
               <TableRow>
-                <TableHead className="">Date updated(MM/DD/YYYY)</TableHead>
+                <TableHead>Date updated(MM/DD/YYYY)</TableHead>
                 <TableHead>Post Image</TableHead>
                 <TableHead>Post title</TableHead>
-                <TableHead>Catagory</TableHead>
+                <TableHead>Category</TableHead>
                 <TableHead className="text-end">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            {userPosts.map((post) => (
-              <TableBody>
-                <TableRow>
+            <TableBody>
+              {userPosts.map((post) => (
+                <TableRow key={post._id}>
                   <TableCell className="font-medium">
                     {new Date(post.updatedAt).toLocaleDateString()}
                   </TableCell>
@@ -96,31 +115,61 @@ export default function DashPost() {
                       <img
                         src={post.image}
                         alt={post.title}
-                        className="w-20 h-10 ibject-cover bg-gray-50"
+                        className="w-20 h-10 object-cover bg-gray-50"
                       />
                     </Link>
                   </TableCell>
                   <TableCell>{post.title}</TableCell>
                   <TableCell>{post.category}</TableCell>
-
                   <TableCell>
                     <Link
-                      className="text-blue-600 hover:underline"
+                      className="text-blue-600 hover:underline mr-4"
                       to={`/update-post/${post.slug}`}
                     >
-                      <span>Edit</span>
+                      Edit
                     </Link>
-                  </TableCell>
-                  <TableCell className="font-medium hover:underline">
-                    <span className="text-red-600 ">Delete</span>
+                    <Popover
+                      open={popoverOpen === post._id}
+                      onOpenChange={(openthis) => {
+                        setPopoverOpen(openthis ? post._id : null);
+                      }}
+                    >
+                      <PopoverTrigger asChild>
+                        <span
+                          onClick={() => {
+                            setPostIdToDelete(post._id);
+                          }}
+                          className="text-red-600 hover:underline cursor-pointer"
+                        >
+                          Delete
+                        </span>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-60 text-center">
+                        <p>Are you sure you want to delete this post?</p>
+                        <div className="flex justify-center gap-2 mt-2">
+                          <button
+                            onClick={handleDeletePost}
+                            className="bg-red-500 text-white px-4 py-2 rounded"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            onClick={() => setPopoverOpen(null)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   </TableCell>
                 </TableRow>
-              </TableBody>
-            ))}
-          </Table>{" "}
+              ))}
+            </TableBody>
+          </Table>
         </div>
       ) : (
-        <div> No Posts</div>
+        <p>No Posts</p>
       )}
     </div>
   );
