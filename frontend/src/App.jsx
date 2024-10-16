@@ -18,7 +18,7 @@ import FooterComponent from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
-import PostPage from "./components/PostPage";
+import PostPage from "./pages/PostPage";
 
 function App() {
   return (
