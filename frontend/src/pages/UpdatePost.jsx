@@ -43,7 +43,7 @@ export default function UpdatePost() {
     try {
       const fetchPost = async () => {
         const data = await axios.post(`/api/post/getposts?postId=${postId}`);
-        // console.log("data", data.data.posts[0]);
+        console.log("data", data.data.posts[0]);
 
         if (data.status !== 200) {
           console.log(data);
@@ -109,6 +109,7 @@ export default function UpdatePost() {
       setPublishError("Make sure to fill the content.");
       return;
     }
+    console.log("formData this is handle submit----------", formData);
     try {
       const response = await axios.put(
         `/api/post/updatePost/${formData._id}/${currentUser._id}`,
@@ -161,6 +162,7 @@ export default function UpdatePost() {
                   setFormData({ ...formData, title: e.target.value })
                 }
                 value={formData.title || ""}
+                // value={"testing"}
               />
             </div>
             <div>

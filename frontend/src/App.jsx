@@ -18,6 +18,7 @@ import FooterComponent from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
+import PostPage from "./components/PostPage";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             </Route>
             <Route path="/features" element={<Features />} />
             <Route path="/emergency" element={<Emergency />} />
+            <Route path="/post/:postSlug" element={<PostPage />} />
           </Routes>
           <FooterComponent />
         </BrowserRouter>
