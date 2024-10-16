@@ -3,7 +3,6 @@ import { Check, CircleX } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import {
   Popover,
   PopoverContent,
@@ -60,6 +59,18 @@ export default function DashUsers() {
 
   const handleDeleteUser = async () => {
     console.log("delete user");
+    try {
+      const res = await axios.delete(`/api/user/delete/${userIdToDelete}`);
+      if (res.statusText !== "OK") {
+        console.log(res.data.message);
+      } else {
+        setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
+        setUserIdToDelete(null);
+        setPopoverOpen(null);
+      }
+    } catch (error) {
+      console.log(error.response?.data?.message || "Something went wrong");
+    }
   };
 
   return (
