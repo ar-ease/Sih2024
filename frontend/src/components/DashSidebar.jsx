@@ -1,3 +1,4 @@
+import { Users } from "lucide-react";
 import { FileCheck } from "lucide-react";
 
 import { useState, useEffect } from "react";
@@ -102,12 +103,24 @@ export default function DashSidebar() {
             to="/dashboard?tab=profile"
             tabValue="profile"
           />
-          <NavItem
-            icon={<FileCheck className="h-4 w-4" />}
-            label="Posts"
-            to="/dashboard?tab=posts"
-            tabValue="posts"
-          />
+
+          {currentUser.isAdmin && (
+            <>
+              <NavItem
+                icon={<FileCheck className="h-4 w-4" />}
+                label="Posts"
+                to="/dashboard?tab=posts"
+                tabValue="posts"
+              />
+
+              <NavItem
+                icon={<Users className="h-4 w-4" />}
+                label="Users"
+                to="/dashboard?tab=users"
+                tabValue="users"
+              />
+            </>
+          )}
 
           <NavItem
             icon={<SettingsIcon className="h-4 w-4" />}
