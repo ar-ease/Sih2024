@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 dotenv.config();
 import UserRoutes from "./routes/user.route.js";
 import authroutes from "./routes/auth.route.js";
+import commentroutes from "./routes/comment.route.js";
 import cookieParser from "cookie-parser";
 const app = express();
 app.use(cookieParser());
@@ -48,6 +49,7 @@ app.get("/api/data", (req, res) => {
 app.use("/api/user", UserRoutes);
 app.use("/api/auth", authroutes);
 app.use("/api/post", postRoutes);
+app.use("/api/comment", commentroutes);
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
