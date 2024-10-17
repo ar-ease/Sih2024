@@ -74,7 +74,7 @@ export default function DashUsers() {
   };
 
   return (
-    <div className="">
+    <div className="mt-3">
       {currentUser.isAdmin && users.length > 0 ? (
         <div className="w-full">
           <Table className>

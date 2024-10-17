@@ -83,7 +83,7 @@ export default function DashPost() {
   };
 
   return (
-    <div className="">
+    <div className="mt-3">
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <div className="w-full">
           <Table>

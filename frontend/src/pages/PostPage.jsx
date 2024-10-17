@@ -6,8 +6,9 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 
 import React, { useEffect, useState } from "react";
-import { set } from "date-fns";
+
 import CallToAction from "@/components/CallToAction";
+import CommentSection from "@/components/CommentSection";
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -51,7 +52,7 @@ export default function PostPage() {
 
   return (
     <>
-      <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
+      <main className=" p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
         <h1 className="text-3xl p-3 text-center font-serif m-w-3xl lg:m-w-4xl">
           {post && post.title}
         </h1>
@@ -78,9 +79,10 @@ export default function PostPage() {
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
 
-        <div className="w-full">
+        {/* <div className="w-full">
           <CallToAction />
-        </div>
+        </div> */}
+        <CommentSection postId={post._id} />
       </main>
     </>
   );
