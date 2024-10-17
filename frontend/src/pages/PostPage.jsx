@@ -52,7 +52,7 @@ export default function PostPage() {
 
   return (
     <>
-      <main className=" p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
+      <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen ">
         <h1 className="text-3xl p-3 text-center font-serif m-w-3xl lg:m-w-4xl">
           {post && post.title}
         </h1>
@@ -82,7 +82,9 @@ export default function PostPage() {
         {/* <div className="w-full">
           <CallToAction />
         </div> */}
-        <CommentSection postId={post._id} />
+        <div className="max-w-2xl w-full mx-auto mt-8 ">
+          <CommentSection postId={post._id} />
+        </div>
       </main>
     </>
   );

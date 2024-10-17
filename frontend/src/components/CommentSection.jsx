@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 import { useSelector } from "react-redux";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import Comment from "./Comment";
 
 export default function CommentSection({ postId }) {
   const { currentUser } = useSelector((state) => state.user);
@@ -36,6 +37,18 @@ export default function CommentSection({ postId }) {
       setCommentError(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const res = await axios.get(`/api/comment/getPostComments/${postId}`);
+        setComments(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getComments();
+  }, [postId]);
 
   return (
     <>
@@ -103,28 +116,16 @@ export default function CommentSection({ postId }) {
             </div>
           </form>
 
-          {/* Display Comments */}
-          <div className="space-y-4">
+          {/* 2nd part Comments */}
+          <div className="flex gap-2">
+            <p className="mt-1">Comments</p>
+            <div className="border border-gray-400 py-1 px-2 w-9 h-8 bg-gray-100 rounded-md ">
+              <p>{comments.length}</p>
+            </div>
+          </div>
+          <div className="space-y-4 mt-6">
             {comments.map((comment) => (
-              <div key={comment.id} className="flex space-x-4">
-                <Avatar
-                  src={comment.avatar}
-                  alt={comment.author}
-                  className="w-10 h-10 rounded-full"
-                />
-                <div className="bg-gray-100 dark:bg-neutral-800 p-3 rounded-lg flex-1">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-sm font-semibold">{comment.author}</h3>
-                    <span className="text-xs text-neutral-500">
-                      {comment.timestamp.toLocaleDateString()}{" "}
-                      {comment.timestamp.toLocaleTimeString()}
-                    </span>
-                  </div>
-                  <p className="text-sm mt-1 text-neutral-800 dark:text-neutral-200">
-                    {comment.text}
-                  </p>
-                </div>
-              </div>
+              <Comment key={comment._id} comment={comment} />
             ))}
 
             {comments.length === 0 && (
