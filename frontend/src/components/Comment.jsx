@@ -1,3 +1,8 @@
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
@@ -7,10 +12,18 @@ import { Avatar } from "@/components/ui/avatar";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function Comment({ comment, onLike, currentUser, onEdit }) {
+export default function Comment({
+  comment,
+  onLike,
+  currentUser,
+  onEdit,
+  onDelete,
+}) {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
+
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -82,7 +95,7 @@ export default function Comment({ comment, onLike, currentUser, onEdit }) {
           <p className="mt-2">{comment.content}</p>
           <div className="flex gap-4">
             <button
-              onClick={onLike}
+              onClick={() => onLike(comment._id)}
               className="flex items-center gap-1 mt-2 text-sm"
             >
               <Heart
@@ -98,10 +111,43 @@ export default function Comment({ comment, onLike, currentUser, onEdit }) {
               </span>
             </button>
 
-            {currentUser && currentUser._id === comment.userId ? (
+            {currentUser && currentUser._id === comment.userId && (
               <button onClick={handleEdit} className="mt-2">
                 Edit
               </button>
+            )}
+
+            {(currentUser && currentUser._id === comment.userId) ||
+            currentUser.isAdmin ? (
+              <>
+                <Popover
+                  open={popoverOpen === comment._id}
+                  onOpenChange={(openthis) => {
+                    setPopoverOpen(openthis ? comment._id : null);
+                  }}
+                >
+                  <PopoverTrigger>
+                    <button className="mt-2">Delete</button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <p>Are you sure you want to delete this comment?</p>
+                    <div className="flex justify-center gap-2 mt-2">
+                      <button
+                        onClick={() => onDelete(comment._id)}
+                        className="bg-red-500 text-white px-4 py-2 rounded"
+                      >
+                        Confirm
+                      </button>
+                      <button
+                        onClick={() => setPopoverOpen(false)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </>
             ) : null}
           </div>
         </>

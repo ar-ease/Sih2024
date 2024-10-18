@@ -1,3 +1,8 @@
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +19,8 @@ export default function CommentSection({ postId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [commentError, setCommentError] = useState(null);
+  const [popoverOpen, setPopoverOpen] = useState(null);
+  const [commentIdToDelete, setCommentIdToDelete] = useState(null);
 
   const fetchComments = async () => {
     try {
@@ -108,6 +115,25 @@ export default function CommentSection({ postId }) {
     );
   };
 
+  const handleDelete = async (commentId) => {
+    console.log("hellow");
+
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      const res = await axios.delete(`/api/comment/deleteComment/${commentId}`);
+      if (res.status === 200) {
+        setComments((prev) => prev.filter((c) => c._id !== commentId));
+        setCommentIdToDelete(null);
+        setPopoverOpen(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {currentUser && (
@@ -185,11 +211,20 @@ export default function CommentSection({ postId }) {
                 <Comment
                   key={comment._id}
                   comment={comment}
-                  onLike={() => handleLike(comment._id)}
+                  onLike={handleLike}
                   currentUser={currentUser}
                   onEdit={handleEdit}
+                  onDelete={handleDelete}
                 />
               ))}
+              {/* {popoverOpen && ( */}
+              <Popover>
+                <PopoverTrigger>{}</PopoverTrigger>
+                <PopoverContent>
+                  Place content for the popover here.
+                </PopoverContent>
+              </Popover>
+              {/* )} */}
             </div>
           )}
         </div>
