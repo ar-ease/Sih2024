@@ -1,12 +1,18 @@
+import { FaHeart } from "react-icons/fa";
+
+import { Heart } from "lucide-react";
+
 import moment from "moment";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { set } from "date-fns";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
-export default function Comment({ comment }) {
+export default function Comment({ comment, onLike }) {
   const [user, setUser] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
   useEffect(() => {
     const getUsers = async () => {
       try {
@@ -19,7 +25,7 @@ export default function Comment({ comment }) {
     };
     getUsers();
   }, [comment]);
-  console.log(user);
+
   return (
     <div>
       <div className="flex space-x-4">
@@ -40,6 +46,23 @@ export default function Comment({ comment }) {
           <p className="text-sm mt-1 text-neutral-800 dark:text-neutral-200">
             {comment.content}
           </p>
+
+          <div className="flex gap-1">
+            <button
+              type="button"
+              onClick={() => onLike()}
+              className={` text-neutral-500 hover:text-red-500 ${
+                currentUser && comment.Likes.includes(currentUser._id)
+                  ? "text-red-500"
+                  : ""
+              }`}
+            >
+              <FaHeart className="text-md">Like</FaHeart>
+            </button>
+            <span className="text-sm text-neutral-500">
+              {comment.numberOfLikes}
+            </span>
+          </div>
         </div>
       </div>
     </div>

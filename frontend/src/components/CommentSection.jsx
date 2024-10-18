@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSelector } from "react-redux";
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import Comment from "./Comment";
@@ -42,6 +42,7 @@ export default function CommentSection({ postId }) {
     const getComments = async () => {
       try {
         const res = await axios.get(`/api/comment/getPostComments/${postId}`);
+
         setComments(res.data);
       } catch (error) {
         console.log(error);
@@ -49,6 +50,31 @@ export default function CommentSection({ postId }) {
     };
     getComments();
   }, [postId]);
+
+  const handleLike = async (commentId) => {
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      const res = await axios.put(`/api/comment/likeComment/${commentId}`);
+      const data = await res.data;
+
+      setComments(
+        comments.map((comment) =>
+          comment._id === commentId
+            ? {
+                ...comment,
+                likes: data.likes,
+                numberOfLikes: data.likes.length,
+              }
+            : comment
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -119,19 +145,24 @@ export default function CommentSection({ postId }) {
           {/* 2nd part Comments */}
           <div className="flex gap-2">
             <p className="mt-1">Comments</p>
-            <div className="border border-gray-400 py-1 px-2 w-9 h-8 bg-gray-100 rounded-md ">
+            <div className="border border-gray-400 py-1 px-2 w-9 h-8 bg-gray-100 dark:bg-gray-700 rounded-md ">
               <p>{comments.length}</p>
             </div>
           </div>
-          <div className="space-y-4 mt-6">
-            {comments.map((comment) => (
-              <Comment key={comment._id} comment={comment} />
-            ))}
 
-            {comments.length === 0 && (
-              <p className="text-neutral-500">No comments yet. Be the first!</p>
-            )}
-          </div>
+          {comments.length === 0 ? (
+            <p className="text-neutral-500">No comments yet. Be the first!</p>
+          ) : (
+            <div className="space-y-4 mt-6">
+              {comments.map((comment) => (
+                <Comment
+                  key={comment?._id}
+                  comment={comment}
+                  onLike={() => handleLike(comment?._id)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </>
