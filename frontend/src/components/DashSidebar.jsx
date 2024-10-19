@@ -12,7 +12,13 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { signoutSuccess } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
-import { ChevronRight, SettingsIcon, UserIcon, MenuIcon } from "lucide-react";
+import {
+  CircleGauge,
+  SettingsIcon,
+  UserIcon,
+  MenuIcon,
+  MessageSquareText,
+} from "lucide-react";
 import { useSelector } from "react-redux";
 
 export default function DashSidebar() {
@@ -107,6 +113,14 @@ export default function DashSidebar() {
           {currentUser.isAdmin && (
             <>
               <NavItem
+                icon={
+                  <CircleGauge className="h-4  w-5 text-red-600 dark:text-red-500" />
+                }
+                label="Dashboard"
+                to="/dashboard?tab=dash"
+                tabValue="dash"
+              />
+              <NavItem
                 icon={<FileCheck className="h-4 w-4" />}
                 label="Posts"
                 to="/dashboard?tab=posts"
@@ -120,7 +134,7 @@ export default function DashSidebar() {
                 tabValue="users"
               />
               <NavItem
-                icon={<Users className="h-4 w-4" />}
+                icon={<MessageSquareText className="h-4 w-4" />}
                 label="Comments"
                 to="/dashboard?tab=comments"
                 tabValue="comments"

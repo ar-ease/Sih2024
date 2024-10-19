@@ -78,7 +78,7 @@ export default function DashCommets() {
   };
 
   return (
-    <div className="mt-3">
+    <div className="mt-20 pt-3">
       {currentUser.isAdmin && comments.length > 0 ? (
         <div className="w-full">
           <Table className>

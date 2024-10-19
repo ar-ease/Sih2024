@@ -57,7 +57,7 @@ export default function PostCard({ post }) {
             </div>
             <div className="flex items-center">
               <Link
-                to={`/blog/${post.slug}`}
+                to={`/post/${post.slug}`}
                 className="inline-flex items-center text-primary hover:text-primary/80 transition-colors duration-300 text-sm font-medium group"
               >
                 Read More

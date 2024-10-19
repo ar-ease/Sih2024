@@ -47,10 +47,10 @@ const Navbar = () => {
     }
   };
   return (
-    <div className="fixed z-10 w-full shadow-md bg-clip-padding">
+    <div className="fixed z-20 w-full shadow-sm bg-clip-padding">
       <div
         className="p-3 sticky top-0  font-sans flex justify-around
-     items-center  bg-opacity-50  backdrop-blur-md "
+     items-center    bg-opacity-10     backdrop-blur-xl"
       >
         <div>
           <Link

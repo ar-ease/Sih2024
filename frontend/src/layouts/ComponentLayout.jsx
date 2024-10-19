@@ -7,7 +7,7 @@ export default function ComponentLayout() {
   return (
     <div>
       <Navbar />
-      <div className="pb-28  pl-20"></div>
+      {/* <div className="pb-28  pl-20"></div> */}
     </div>
   );
 }
