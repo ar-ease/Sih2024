@@ -45,7 +45,7 @@ export default function DashCommets() {
   const handleShowMore = async () => {
     try {
       const startIndex = comments.length;
-      const res = await axios.post(
+      const res = await axios.get(
         `/api/comment/getcomments?startIndex=${startIndex}`
       );
       if (res.status === 200) {
@@ -58,15 +58,16 @@ export default function DashCommets() {
   };
 
   const handleDeleteComment = async () => {
+    console.log("deleting comment", commentIdToDelete);
     try {
       const res = await axios.delete(
-        `/api/comment/delete/${commentIdToDelete}`
+        `/api/comment/deleteComment/${commentIdToDelete}`
       );
       if (res.statusText !== "OK") {
         console.log(res.data.message);
       } else {
         setComments((prev) =>
-          prev.filter((user) => user._id !== userIdToDelete)
+          prev.filter((user) => user._id !== commentIdToDelete)
         );
         setCommentIdToDelete(null);
         setPopoverOpen(null);
@@ -92,13 +93,13 @@ export default function DashCommets() {
             <TableHeader>
               <TableRow className="w-full">
                 <TableHead className="w-1/5">
-                  Date Created (MM/DD/YYYY)
+                  Date Updated (MM/DD/YYYY)
                 </TableHead>
 
-                <TableHead className="w-1/5">User Image</TableHead>
-                <TableHead className="w-1/5">Username</TableHead>
-                <TableHead className="w-1/5">Email</TableHead>
-                <TableHead className="w-1/5">Admin</TableHead>
+                <TableHead className="w-1/5">Comment Content</TableHead>
+                <TableHead className="w-1/5">Number of likes</TableHead>
+                <TableHead className="w-1/5">Post Id</TableHead>
+                <TableHead className="w-1/5">User Id</TableHead>
                 <TableHead className="w-1/5 pr-20">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -108,22 +109,10 @@ export default function DashCommets() {
                   <TableCell className="font-medium">
                     {new Date(comment.createdAt).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>
-                    <img
-                      src={comment.profilePicture}
-                      alt={comment.username}
-                      className="w-10 h-10 object-cover rounded-full "
-                    />
-                  </TableCell>
-                  <TableCell>{comment.username}</TableCell>
-                  <TableCell>{comment.email}</TableCell>
-                  <TableCell>
-                    {comment.isAdmin ? (
-                      <Check className="text-blue-700" />
-                    ) : (
-                      <CircleX />
-                    )}
-                  </TableCell>
+                  <TableCell>{comment.content}</TableCell>
+                  <TableCell>{comment.numberOfLikes}</TableCell>
+                  <TableCell>{comment.postId}</TableCell>
+                  <TableCell>{comment.userId}</TableCell>
                   <TableCell>
                     <Popover
                       open={popoverOpen === comment._id}
@@ -134,7 +123,7 @@ export default function DashCommets() {
                       <PopoverTrigger asChild>
                         <span
                           onClick={() => {
-                            setUserIdToDelete(comment._id);
+                            setCommentIdToDelete(comment._id);
                           }}
                           className="text-red-600 hover:underline cursor-pointer "
                         >
