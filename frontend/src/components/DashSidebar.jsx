@@ -119,6 +119,12 @@ export default function DashSidebar() {
                 to="/dashboard?tab=users"
                 tabValue="users"
               />
+              <NavItem
+                icon={<Users className="h-4 w-4" />}
+                label="Comments"
+                to="/dashboard?tab=comments"
+                tabValue="comments"
+              />
             </>
           )}
 

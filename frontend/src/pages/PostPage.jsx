@@ -1,8 +1,9 @@
+import PostCard from "@/components/PostCard";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 
 import { LoaderCircle } from "lucide-react";
 
-import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 
 import React, { useEffect, useState } from "react";
@@ -15,12 +16,13 @@ export default function PostPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [post, setPost] = useState(null);
+  const [recentPosts, setRecentPosts] = useState(null);
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const data = await axios.post(`/api/post/getposts?slug=${postSlug}`);
+        const data = await axios.get(`/api/post/getposts?slug=${postSlug}`);
 
         if (data.status !== 200) {
           setError(true);
@@ -40,6 +42,24 @@ export default function PostPage() {
     };
     fetchPost();
   }, [postSlug]);
+
+  useEffect(() => {
+    try {
+      const fetchRecentPosts = async () => {
+        const res = await axios.get(`/api/post/getposts?limit=3`);
+
+        if (res.status !== 200) {
+          return;
+        }
+        if (res.status === 200) {
+          setRecentPosts(res?.data?.posts);
+        }
+      };
+      fetchRecentPosts();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   if (loading) {
     return (
       <>
@@ -84,6 +104,17 @@ export default function PostPage() {
         </div> */}
         <div className="max-w-2xl w-full mx-auto mt-8 ">
           <CommentSection postId={post._id} />
+        </div>
+        <div className="flex flex-col justify-center items-center mb-5">
+          <h1>Recent Posts</h1>
+          <div className="w-full grid gap-5 mt-5 cols-span-2 sm:grid-cols-3 items-center">
+            {recentPosts &&
+              recentPosts.map((post) => (
+                <Link to={`/post/${post.slug}`}>
+                  <PostCard key={post._id} post={post} />
+                </Link>
+              ))}
+          </div>
         </div>
       </main>
     </>

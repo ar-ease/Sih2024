@@ -59,7 +59,7 @@ export default function Comment({
   };
 
   return (
-    <div className="flex flex-col gap-2 p-4 border border-gray-200 rounded-lg">
+    <div className="flex flex-col gap-2 p-4 border border-gray-200 dark:border-slate-800 rounded-lg">
       <div className="flex items-center gap-2 text-xs">
         <Avatar>
           <img src={user?.profilePicture} alt={user?.username} />

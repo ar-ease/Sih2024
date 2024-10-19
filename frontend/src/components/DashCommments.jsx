@@ -1,7 +1,8 @@
+import { Check, CircleX } from "lucide-react";
+
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import {
   Popover,
   PopoverContent,
@@ -16,77 +17,70 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { set } from "date-fns";
 
-export default function DashPost() {
+export default function DashCommets() {
   const { currentUser } = useSelector((state) => state.user);
-  const [userPosts, setUserPosts] = useState([]);
+  const [comments, setComments] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [popoverOpen, setPopoverOpen] = useState(null);
-  const [postIdToDelete, setPostIdToDelete] = useState(null);
+  const [commentIdToDelete, setCommentIdToDelete] = useState(null);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchComments = async () => {
       try {
         if (currentUser.isAdmin) {
-          const res = await axios.get(
-            `/api/post/getposts?userId=${currentUser._id}`
-          );
+          const res = await axios.get(`/api/comment/getcomments`);
           if (res.status === 200) {
-            setUserPosts(res.data.posts);
-            setShowMore(res.data.posts.length >= 9);
+            setComments(res.data.comments);
+            setShowMore(res.data.comments.length >= 9);
           }
         }
       } catch (error) {
         console.log(error);
       }
     };
-    fetchPosts();
+    fetchComments();
   }, [currentUser._id, currentUser.isAdmin]);
 
   const handleShowMore = async () => {
     try {
-      const startIndex = userPosts.length;
+      const startIndex = comments.length;
       const res = await axios.post(
-        `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+        `/api/comment/getcomments?startIndex=${startIndex}`
       );
       if (res.status === 200) {
-        setUserPosts((prev) => [...prev, ...res.data.posts]);
-        setShowMore(res.data.posts.length >= 9);
+        setComments((prev) => [...prev, ...res.data.comments]);
+        setShowMore(res.data.comments.length >= 9);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleDeletePost = async () => {
-    setPopoverOpen(null);
+  const handleDeleteComment = async () => {
     try {
-      const response = await axios.delete(
-        `/api/post/deletepost/${postIdToDelete}/${currentUser._id}`
+      const res = await axios.delete(
+        `/api/comment/delete/${commentIdToDelete}`
       );
-
-      if (response.status === 200) {
-        // Use response.status instead of statusText
-        setUserPosts((prev) =>
-          prev.filter((post) => post._id !== postIdToDelete)
-        );
+      if (res.statusText !== "OK") {
+        console.log(res.data.message);
       } else {
-        console.log("Unexpected response:", response);
+        setComments((prev) =>
+          prev.filter((user) => user._id !== userIdToDelete)
+        );
+        setCommentIdToDelete(null);
+        setPopoverOpen(null);
       }
     } catch (error) {
-      console.error(
-        "Error deleting post:",
-        error.response?.data || error.message
-      );
+      console.log(error.response?.data?.message || "Something went wrong");
     }
   };
 
   return (
     <div className="mt-3">
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+      {currentUser.isAdmin && comments.length > 0 ? (
         <div className="w-full">
-          <Table>
+          <Table className>
             {showMore && (
               <TableCaption
                 onClick={handleShowMore}
@@ -96,59 +90,62 @@ export default function DashPost() {
               </TableCaption>
             )}
             <TableHeader>
-              <TableRow>
-                <TableHead>Date updated(MM/DD/YYYY)</TableHead>
-                <TableHead>Post Image</TableHead>
-                <TableHead>Post title</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="pl-8">Actions</TableHead>
+              <TableRow className="w-full">
+                <TableHead className="w-1/5">
+                  Date Created (MM/DD/YYYY)
+                </TableHead>
+
+                <TableHead className="w-1/5">User Image</TableHead>
+                <TableHead className="w-1/5">Username</TableHead>
+                <TableHead className="w-1/5">Email</TableHead>
+                <TableHead className="w-1/5">Admin</TableHead>
+                <TableHead className="w-1/5 pr-20">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {userPosts.map((post) => (
-                <TableRow key={post._id}>
+              {comments.map((comment) => (
+                <TableRow key={comment._id}>
                   <TableCell className="font-medium">
-                    {new Date(post.updatedAt).toLocaleDateString()}
+                    {new Date(comment.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <Link to={`/post/${post.slug}`}>
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        className="w-20 h-10 object-cover bg-gray-50"
-                      />
-                    </Link>
+                    <img
+                      src={comment.profilePicture}
+                      alt={comment.username}
+                      className="w-10 h-10 object-cover rounded-full "
+                    />
                   </TableCell>
-                  <TableCell>{post.title}</TableCell>
-                  <TableCell>{post.category}</TableCell>
+                  <TableCell>{comment.username}</TableCell>
+                  <TableCell>{comment.email}</TableCell>
                   <TableCell>
-                    <Link
-                      className="text-blue-600 hover:underline mr-4"
-                      to={`/update-post/${post._id}`}
-                    >
-                      Edit
-                    </Link>
+                    {comment.isAdmin ? (
+                      <Check className="text-blue-700" />
+                    ) : (
+                      <CircleX />
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <Popover
-                      open={popoverOpen === post._id}
+                      open={popoverOpen === comment._id}
                       onOpenChange={(openthis) => {
-                        setPopoverOpen(openthis ? post._id : null);
+                        setPopoverOpen(openthis ? comment._id : null);
                       }}
                     >
                       <PopoverTrigger asChild>
                         <span
                           onClick={() => {
-                            setPostIdToDelete(post._id);
+                            setUserIdToDelete(comment._id);
                           }}
-                          className="text-red-600 hover:underline cursor-pointer"
+                          className="text-red-600 hover:underline cursor-pointer "
                         >
                           Delete
                         </span>
                       </PopoverTrigger>
                       <PopoverContent className="w-60 text-center">
-                        <p>Are you sure you want to delete this post?</p>
+                        <p>Are you sure you want to delete the user?</p>
                         <div className="flex justify-center gap-2 mt-2">
                           <button
-                            onClick={handleDeletePost}
+                            onClick={handleDeleteComment}
                             className="bg-red-500 text-white px-4 py-2 rounded"
                           >
                             Confirm
@@ -169,7 +166,7 @@ export default function DashPost() {
           </Table>
         </div>
       ) : (
-        <p>No Posts</p>
+        <p>NO USERS YET</p>
       )}
     </div>
   );

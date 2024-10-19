@@ -23,8 +23,6 @@ import {
 } from "../redux/user/userSlice.js";
 import axios from "axios";
 import { app } from "../firebase";
-import { set } from "date-fns";
-import { Link } from "react-router-dom";
 
 export default function DashProfile() {
   const navigate = useNavigate();
@@ -33,6 +31,7 @@ export default function DashProfile() {
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateError, setUpdateError] = useState(null);
   const [imageFileUploading, setImageFileUploading] = useState(false);
