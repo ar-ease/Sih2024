@@ -12,15 +12,23 @@ import cookieParser from "cookie-parser";
 
 import path from "path";
 
+mongoose.connect(process.env.MONGO).then(() => {
+  console.log("Connected to MongoDB there");
+});
+
+const __dirname = path.resolve();
+
 const app = express();
 app.use(cookieParser());
 
-// console.log("hello", process.env.HELLO);
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO).then(() => {
-  console.log("Connected to MongoDB there");
+const port = process.env.PORT || 4000;
+console.log(process.env.PORT);
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
 
 app.get("/", (req, res) => {
@@ -31,14 +39,14 @@ app.use("/api/user", UserRoutes);
 app.use("/api/auth", authroutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentroutes);
+
+app.use("/uploads", express.static(path.join(__dirname, "/client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+});
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
   res.status(statusCode).json({ success: false, statusCode, message });
-});
-const port = process.env.PORT || 4000;
-console.log(process.env.PORT);
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
 });
