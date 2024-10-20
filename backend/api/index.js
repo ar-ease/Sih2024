@@ -10,13 +10,13 @@ import authroutes from "./routes/auth.route.js";
 import commentroutes from "./routes/comment.route.js";
 import cookieParser from "cookie-parser";
 
-import path from "path";
+// import path from "path";
 
 mongoose.connect(process.env.MONGO).then(() => {
   console.log("Connected to MongoDB there");
 });
 
-const __dirname = path.resolve();
+// const __dirname = path.resolve();
 
 const app = express();
 app.use(cookieParser());
@@ -40,11 +40,11 @@ app.use("/api/auth", authroutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentroutes);
 
-app.use("/uploads", express.static(path.join(__dirname, "/client/dist")));
+// app.use("/uploads", express.static(path.join(__dirname, "/client/dist")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
-});
+// app.get("*", (req, res) => {
+//   res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+// });
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
