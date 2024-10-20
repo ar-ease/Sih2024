@@ -5,7 +5,7 @@ import path from "path";
 export default defineConfig({
   server: {
     proxy: {
-      "/api": "https://protective.onrender.com",
+      "/api": "https://protective.onrender.com/",
       secure: false,
     },
   },
