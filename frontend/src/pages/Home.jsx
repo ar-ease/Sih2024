@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/Button"; // Assuming you have a Button component from ShadCN
+import Button from "@/components/ui/Button"; // Assuming you have a Button component from ShadCN
 import axios from "axios";
 import PostCard from "@/components/PostCard";
 import { Link } from "react-router-dom";
