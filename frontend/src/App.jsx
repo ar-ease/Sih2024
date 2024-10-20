@@ -6,8 +6,8 @@ import {
   BrowserRouter,
 } from "react-router-dom";
 import Home from "@/pages/Home";
-import About from "@/pages/about";
-import Signin from "@/pages/signin";
+import About from "@/pages/About";
+import Signin from "@/pages/Signin";
 import Signup from "@/pages/Signup";
 import Dashboard from "@/pages/Dashboard";
 import OnlyAdminPrivateRoute from "@/components/OnlyAdminPrivateRoute";
