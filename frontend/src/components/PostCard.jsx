@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { Badge } from "@/components/ui/badge";
-import { Clock, ArrowRight, CloudHail } from "lucide-react";
+import { Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 export default function PostCard({ post }) {
   const [isHovered, setIsHovered] = useState(false);

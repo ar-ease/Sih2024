@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { signoutSuccess } from "../redux/user/userSlice.js";

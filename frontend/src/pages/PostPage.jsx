@@ -8,7 +8,6 @@ import { Link, useParams } from "react-router-dom";
 
 import React, { useEffect, useState } from "react";
 
-import CallToAction from "@/components/CallToAction";
 import CommentSection from "@/components/CommentSection";
 
 export default function PostPage() {
