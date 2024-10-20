@@ -115,7 +115,7 @@ export default function CreatePost() {
   console.log("formData", formData);
   return (
     <>
-      <div className="p-3 max-w-3xl mx-auto min-h-screen">
+      <div className="p-3 max-w-3xl mx-auto min-h-screen pt-28">
         <h1 className="text-center text-3xl my-7 font-semibold">Create Post</h1>
 
         <form className="flex flex-col gap-4 " onSubmit={handleSubmit}>
@@ -139,19 +139,17 @@ export default function CreatePost() {
               >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue>
-                    {formData.category ? formData.category : "Uncategorized"}{" "}
-                    {/* Show "Uncategorized" when no value */}
+                    {formData.category ? formData.category : "Uncategorized"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="uncategorized">Uncategorized</SelectItem>{" "}
-                    {/* Option for Uncategorized */}
                     <SelectItem value="apple">Apple</SelectItem>
                     <SelectItem value="banana">Banana</SelectItem>
                     <SelectItem value="blueberry">Blueberry</SelectItem>
                     <SelectItem value="grapes">Grapes</SelectItem>
                     <SelectItem value="pineapple">Pineapple</SelectItem>
+                    <SelectItem value="others">Others</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
