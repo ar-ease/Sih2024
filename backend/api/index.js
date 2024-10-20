@@ -9,6 +9,9 @@ import UserRoutes from "./routes/user.route.js";
 import authroutes from "./routes/auth.route.js";
 import commentroutes from "./routes/comment.route.js";
 import cookieParser from "cookie-parser";
+
+import path from "path";
+
 const app = express();
 app.use(cookieParser());
 
@@ -22,28 +25,6 @@ mongoose.connect(process.env.MONGO).then(() => {
 
 app.get("/", (req, res) => {
   res.json("Server is ready sdd");
-});
-
-app.get("/api/data", (req, res) => {
-  const dummyData = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "a@gmail.com",
-    },
-    {
-      id: 2,
-      name: "Jane Doe",
-      email: "b@gmail.com",
-    },
-    {
-      id: 3,
-      name: "Jim Doe",
-      email: "c@gmail.com",
-    },
-  ];
-
-  res.json(dummyData);
 });
 
 app.use("/api/user", UserRoutes);
