@@ -5,7 +5,7 @@ import path from "path";
 export default defineConfig({
   server: {
     proxy: {
-      "/api": "https://protective.onrender.com/",
+      "/api": "https://protective.onrender.com",
       secure: false,
     },
   },
@@ -14,6 +14,17 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"], // Add this line
+    extensions: [".js", ".jsx", ".json"],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+        assetFileNames: "assets/[name].[ext]",
+        chunkFileNames: "assets/[name].js",
+        entryFileNames: "assets/[name].js",
+      },
+    },
+    sourcemap: false,
   },
 });
